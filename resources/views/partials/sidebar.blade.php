@@ -85,23 +85,33 @@
     @endif 
 
 
-    @if(Auth::user()->role == 'calon_pengantin')
-          <li class="nav-item {{(request()->is('catin_lihat_jadwal')) ? 'active' : ''}}">
-            <a class="nav-link" href="{{ route('catin_lihat_jadwal') }}">
-              <i class="icon-grid menu-icon"></i>
-              <span class="menu-title">Lihat Jadwal Pra-Nikah</span>
-            </a>
-          </li>
+      @if(Auth::user()->role == 'calon_pengantin')
+      <li class="nav-item {{(request()->is('catin_lihat_jadwal')) ? 'active' : ''}}">
+        <a class="nav-link" href="{{ route('catin_lihat_jadwal') }}">
+          <i class="icon-grid menu-icon"></i>
+          <span class="menu-title">Lihat Jadwal Pra-Nikah</span>
+        </a>
+      </li>
 
 
-           <li class="nav-item {{(request()->is('sertifikat_catin')) ? 'active' : ''}}">
-            <a class="nav-link" href="{{ route('sertifikat_catin') }}">
-              <i class="icon-file menu-icon"></i>
-              <span class="menu-title">Lihat Sertifikat</span>
-            </a>
-          </li>
+      <li class="nav-item {{(request()->is('sertifikat_catin_suami')) ? 'active' : ''}}">
+        <a class="nav-link" href="{{ route('sertifikat_catin_suami') }}">
+          <i class="icon-file menu-icon"></i>
+          <span class="menu-title">Lihat Sertifikat Suami</span>
+        </a>
+      </li>
 
-    @endif 
+
+      <li class="nav-item {{(request()->is('sertifikat_catin_istri')) ? 'active' : ''}}">
+        <a class="nav-link" href="{{ route('sertifikat_catin_istri') }}">
+          <i class="icon-file menu-icon"></i>
+          <span class="menu-title">Lihat Sertifikat Istri</span>
+        </a>
+      </li>
+
+     
+
+      @endif 
 
 
     @if(Auth::user()->role == 'kepala_kua')

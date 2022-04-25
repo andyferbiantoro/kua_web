@@ -72,24 +72,7 @@ public function calon_pengantin_add(Request $request){
       ]);
 
 
-   // $data_add = new CalonPengantin();
-
-   // $data_add->nik_calon_suami = $request->input('nik_calon_suami');
-   // $data_add->nama_calon_suami = $request->input('nama_calon_suami');
-   // $data_add->no_hp_calon_suami = $request->input('no_hp_calon_suami');
-   // $data_add->email_calon_suami = $request->input('email_calon_suami');
-   // $data_add->alamat_calon_suami = $request->input('alamat_calon_suami');
-   // $data_add->ttl_calon_suami = $request->input('ttl_calon_suami');
-   // $data_add->nik_calon_istri = $request->input('nik_calon_istri');
-   // $data_add->nama_calon_istri = $request->input('nama_calon_istri');
-   // $data_add->no_hp_calon_istri = $request->input('no_hp_calon_istri');
-   // $data_add->email_calon_istri = $request->input('email_calon_istri');
-   // $data_add->alamat_calon_istri = $request->input('alamat_calon_istri');
-   // $data_add->ttl_calon_istri = $request->input('ttl_calon_istri');
-   // $data_add->tanggal_rencana_menikah = $request->input('tanggal_rencana_menikah');
-
-  
-   // $data_add->save();
+   
 
    return redirect('/calon_pengantin')->with('success', 'Data calon pengantin Baru Berhasil Ditambahkan');
 }

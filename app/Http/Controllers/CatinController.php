@@ -37,7 +37,7 @@ public function catin_lihat_jadwal()
 }
 
 
-public function sertifikat_catin()
+public function sertifikat_catin_suami()
   {
 
 
@@ -48,9 +48,11 @@ public function sertifikat_catin()
    ->where('calon_pengantin.id_user',  Auth::user()->id)
    ->where('sertifikat.status', 1)
    ->get();
+   
 
    $cek_pengantin = CalonPengantin::where('id_user',Auth::user()->id)->first();
    $cek_sertifikat = Sertifikat::where('id_calon_pengantin',$cek_pengantin->id)->first();
+
 
    $materi = DB::table('materi_bimbingan')
    ->join('calon_pengantin', 'materi_bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
@@ -59,7 +61,35 @@ public function sertifikat_catin()
    ->orderBy('materi_bimbingan.id','DESC')
    ->get();
 
-   return view('catin.sertifikat_catin',compact('sertifikat','materi'));
+   return view('catin.sertifikat_catin_suami',compact('sertifikat','materi'));
+}
+
+
+public function sertifikat_catin_istri()
+  {
+
+
+   $sertifikat = DB::table('sertifikat')
+   ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
+   ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+   ->orderBy('sertifikat.id','DESC')
+   ->where('calon_pengantin.id_user',  Auth::user()->id)
+   ->where('sertifikat.status', 1)
+   ->get();
+   
+
+   $cek_pengantin = CalonPengantin::where('id_user',Auth::user()->id)->first();
+   $cek_sertifikat = Sertifikat::where('id_calon_pengantin',$cek_pengantin->id)->first();
+
+
+   $materi = DB::table('materi_bimbingan')
+   ->join('calon_pengantin', 'materi_bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+   ->select('materi_bimbingan.*')
+   ->where('materi_bimbingan.id_calon_pengantin', $cek_sertifikat->id_calon_pengantin)
+   ->orderBy('materi_bimbingan.id','DESC')
+   ->get();
+
+   return view('catin.sertifikat_catin_istri',compact('sertifikat','materi'));
 }
 
 
@@ -93,6 +123,40 @@ public function catin_cetak_sertifikat_suami()
   $pdf = PDF::loadview('catin.cetak_sertifikat_suami', ['sertifikat' => $sertifikat],['materi' => $materi])->setPaper('A4','landscape');
 
   return $pdf->stream('sertifikat_suami.pdf');
+
+    
+}
+
+public function catin_cetak_sertifikat_istri()
+{
+
+  $sertifikat = DB::table('sertifikat')
+      ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
+      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+      ->orderBy('sertifikat.id','DESC')
+      ->where('calon_pengantin.id_user',  Auth::user()->id)
+      ->where('sertifikat.status', 1)
+      ->get();
+
+
+      $cek_pengantin = CalonPengantin::where('id_user',Auth::user()->id)->first();
+      $cek_sertifikat = Sertifikat::where('id_calon_pengantin',$cek_pengantin->id)->first();
+
+      $materi = DB::table('materi_bimbingan')
+      ->join('calon_pengantin', 'materi_bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+      ->select('materi_bimbingan.*')
+      ->where('materi_bimbingan.id_calon_pengantin', $cek_sertifikat->id_calon_pengantin)
+      ->orderBy('materi_bimbingan.id','DESC')
+      ->get();
+
+//return $sertifikat;
+      view()->share('sertifikat', $sertifikat);
+      view()->share('materi', $materi);
+
+
+  $pdf = PDF::loadview('catin.cetak_sertifikat_istri', ['sertifikat' => $sertifikat],['materi' => $materi])->setPaper('A4','landscape');
+
+  return $pdf->stream('sertifikat_istri.pdf');
 
     
 }

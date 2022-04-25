@@ -95,8 +95,11 @@ Route::group(['middleware' => ['auth', 'calon_pengantin']],function(){
 
     Route::get('/catin_lihat_jadwal', 'CatinController@catin_lihat_jadwal')->name('catin_lihat_jadwal');
 
-    Route::get('/sertifikat_catin', 'CatinController@sertifikat_catin')->name('sertifikat_catin');
+    Route::get('/sertifikat_catin_suami', 'CatinController@sertifikat_catin_suami')->name('sertifikat_catin_suami');
     Route::get('/catin_cetak_sertifikat_suami', 'CatinController@catin_cetak_sertifikat_suami')->name('catin_cetak_sertifikat_suami');
+
+    Route::get('/sertifikat_catin_istri', 'CatinController@sertifikat_catin_istri')->name('sertifikat_catin_istri');
+    Route::get('/catin_cetak_sertifikat_istri', 'CatinController@catin_cetak_sertifikat_istri')->name('catin_cetak_sertifikat_istri');
 
 });
 
