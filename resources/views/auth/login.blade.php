@@ -27,10 +27,10 @@
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
               <div class="brand-logo">
-                <img src="../public/uploads/logo_kua/logo_kua.jpg" alt="logo">
+                <img src="../public/uploads/logo_kua/logo_kua.jpg" alt="logo" style="object-position: center;">
               </div>
-              <h4>Hello! let's get started</h4>
-              <h6 class="font-weight-light">Sign in to continue.</h6>
+              <h4>Login</h4>
+             
                @if (session('success'))
                   <div class="alert alert-success">
                     {{ session('success') }}
@@ -53,10 +53,10 @@
                   <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Login</button>
                 </div>
               
-               
+               <!-- 
                 <div class="text-center mt-4 font-weight-light">
                   Don't have an account? <a href="{{route('register')}}" class="text-primary">Create</a>
-                </div>
+                </div> -->
               </form>
             </div>
           </div>
