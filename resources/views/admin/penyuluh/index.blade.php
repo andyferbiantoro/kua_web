@@ -89,6 +89,7 @@ Data Penyuluh
                                 <a href="#" data-toggle="modal" onclick="deleteData({{$data->id}})" data-target="#DeleteModal">
                                   <button class="btn btn-danger btn-sm icon-trash menu-icon" title="Hapus"></button>
                                 </a>
+
                               </td>
                               
                               <td style="display: none;">{{$data->jenis_penyuluh}}</td>
@@ -442,9 +443,10 @@ Data Penyuluh
           </form>
         </div>
       </div>
+      </div>
 
 
-       <!-- Modal konfirmasi Hapus -->
+      <!-- Modal konfirmasi Hapus -->
     <div id="DeleteModal" class="modal fade" role="dialog">
       <div class="modal-dialog ">
         <!-- Modal content-->

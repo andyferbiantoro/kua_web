@@ -91,6 +91,8 @@ Route::group(['middleware' => ['auth', 'penyuluh']],function(){
 });
 
 
+
+
 Route::group(['middleware' => ['auth', 'calon_pengantin']],function(){
 
     Route::get('/catin_lihat_jadwal', 'CatinController@catin_lihat_jadwal')->name('catin_lihat_jadwal');

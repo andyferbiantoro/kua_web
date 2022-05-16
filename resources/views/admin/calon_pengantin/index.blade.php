@@ -71,7 +71,9 @@ Data Calon Penganting
                                 <a href="#" data-toggle="modal" onclick="deleteData({{$data->id}})" data-target="#DeleteModal">
                                   <button class="btn btn-danger btn-sm icon-trash menu-icon" title="Hapus"></button>
                                 </a>
+
                               </td>
+
                               <td style="display: none;">{{$data->no_hp_calon_suami}}</td>
                               <td style="display: none;">{{$data->no_hp_calon_istri}}</td>
                               <td style="display: none;">{{$data->email_calon_suami}}</td>
@@ -91,7 +93,7 @@ Data Calon Penganting
             </div>
 
 
-
+            <!-- Modal Tambah data Catin -->
             <div class="modal fade" id="ModalTambah" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -202,6 +204,8 @@ Data Calon Penganting
 
 
 
+
+
         <!-- Modal Update -->
         <div id="updateInformasi" class="modal fade" role="dialog">
           <div class="modal-dialog modal-lg">
@@ -301,8 +305,18 @@ Data Calon Penganting
           </form>
         </div>
       </div>
+      </div>
 
 
+
+
+
+
+
+
+
+       <!-- Modal konfirmasi Hapus -->
+  
        <!-- Modal konfirmasi Hapus -->
     <div id="DeleteModal" class="modal fade" role="dialog">
       <div class="modal-dialog ">
@@ -310,7 +324,7 @@ Data Calon Penganting
         <form action="" id="deleteForm" method="post">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Hapus Data Pengantin</h5>
+              <h5 class="modal-title">Hapus Data Wali Nikah</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -318,7 +332,7 @@ Data Calon Penganting
             <div class="modal-body">
               {{ csrf_field() }}
               {{ method_field('POST') }}
-              <p>Apakah anda yakin ingin menghapus data pengantin ini ?</p>
+              <p>Apakah anda yakin ingin menghapus data wali nikah ini ?</p>
               <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Batal</button>
               <button type="submit" name="" class="btn btn-danger float-right mr-2" data-dismiss="modal" onclick="formSubmit()">Hapus</button>
             </div>
@@ -326,6 +340,7 @@ Data Calon Penganting
         </form>
       </div>
     </div> 
+
 
   </div>
 
