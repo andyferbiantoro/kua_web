@@ -12,9 +12,9 @@ Data Sertifikat Calon Pengantin
               <div class="card">
                 <div class="card-body">
                   <p class="card-title">Data Sertifikat Calon Pengantin</p>
-                  <button type="button" class="btn btn-success " data-toggle="modal" data-target="#ModalTambah">
+                 <!--  <button type="button" class="btn btn-success " data-toggle="modal" data-target="#ModalTambah">
                     Tambah Sertifikat 
-                  </button><br><br>
+                  </button><br><br> -->
                   
                 @if (session('success'))
                 <div class="alert alert-success">

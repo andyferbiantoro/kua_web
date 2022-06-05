@@ -51,7 +51,7 @@ td {
 
             
             <a style="margin-left: 10%; position: relative;">Tempat/Tanggal Lahir </a>
-            <a style="margin-left: 15%; position: relative">: {{$data->ttl_calon_suami}}</a><br>
+            <a style="margin-left: 15%; position: relative">: {{$data->tempat_lahir_calon_suami}}, {{date("j F Y", strtotime($data->tanggal_lahir_calon_suami))}}</a><br>
 
             <a style="margin-left: 10%; position: relative;">Nomor Induk Kependudukan(NIK) </a>
             <a style="margin-left: 7%; position: relative">: {{$data->nik_calon_suami}}</a><br>

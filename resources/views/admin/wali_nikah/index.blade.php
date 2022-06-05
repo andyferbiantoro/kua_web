@@ -52,7 +52,7 @@ Data Wali Nikah
                             <tr>
                               <td>{{$no++}}</td>
                               <td>{{$data->nama_lengkap }}</td>
-                              <td>{{$data->ttl }}</td>
+                              <td>{{$data->tempat_lahir }}, {{date("j F Y", strtotime($data->tanggal_lahir))}}</td>
                               <td>{{$data->nik }}</td>
                               <td>{{$data->kewarganegaraan }}</td>
                               <td>{{$data->agama }}</td>
@@ -95,36 +95,45 @@ Data Wali Nikah
 
                     {{csrf_field()}}
 
-                   
-
-                       <div class="form-group">
-                        <label for="nama_lengkap">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required=""></input>
-                      </div>
-
                       <div class="form-group">
-                        <label for="ttl">Tempat Tanggal Lahir</label>
-                        <textarea type="text" class="form-control" id="ttl" name="ttl" required=""></textarea>
+                        <label for="nama_lengkap">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required="" onkeypress="return event.charCode < 48 || event.charCode  >57"></input>
                       </div>
+
+                      <div class="form-group form-success">
+                        <label >Tempat Lahir</label>
+                        <select  name="tempat_lahir" class="form-control"  required="">
+                         <option selected disabled> -- Pilih Tempat Lahir -- </option>
+                         @foreach($cities as $data)
+                         <option >{{$data->city_name}}</option>
+                         @endforeach
+                       </select>
+                       <span class="form-bar"></span>
+                     </div>
+
+                     <div class="form-group">
+                      <label for="tanggal_lahir">Tanggal Lahir</label>
+                      <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir"  required=""></input>
+                    </div>
 
                       <div class="form-group">
                         <label for="nik">NIK</label>
-                        <input type="text" class="form-control" id="nik" name="nik"  required=""></input>
+                        <input type="number" class="form-control" id="nik" name="nik"  required=""></input>
                       </div>
 
                       <div class="form-group">
                         <label for="kewarganegaraan">Kewarganegaraan</label>
-                        <input type="text" class="form-control" id="kewarganegaraan" name="kewarganegaraan"  required=""></input>
+                        <input type="text" class="form-control" id="kewarganegaraan" name="kewarganegaraan"  required="" onkeypress="return event.charCode < 48 || event.charCode  >57"></input>
                       </div>
 
                       <div class="form-group">
                         <label for="agama">Agama</label>
-                        <input type="text" class="form-control" id="agama" name="agama"  required=""></input>
+                        <input type="text" class="form-control" id="agama" name="agama"  required="" onkeypress="return event.charCode < 48 || event.charCode  >57"></input>
                       </div>
 
                       <div class="form-group">
                         <label for="pekerjaan">Pekerjaan</label>
-                        <input type="text" class="form-control" id="pekerjaan" name="pekerjaan"  required=""></input>
+                        <input type="text" class="form-control" id="pekerjaan" name="pekerjaan"  required="" onkeypress="return event.charCode < 48 || event.charCode  >57"></input>
                       </div>
 
                        <div class="form-group">
@@ -171,10 +180,21 @@ Data Wali Nikah
                         <input type="text" class="form-control" id="nama_lengkap_update" name="nama_lengkap" required=""></input>
                       </div>
 
-                      <div class="form-group">
-                        <label for="ttl">Tempat Tanggal Lahir</label>
-                        <textarea type="text" class="form-control" id="ttl_update" name="ttl" required=""></textarea>
-                      </div>
+                     <div class="form-group form-success">
+                        <label >Tempat Lahir</label>
+                        <select  name="tempat_lahir" class="form-control" >
+                         <option selected disabled> -- Pilih Tempat Lahir -- </option>
+                         @foreach($cities as $data)
+                         <option >{{$data->city_name}}</option>
+                         @endforeach
+                       </select>
+                       <span class="form-bar"></span>
+                     </div>
+
+                     <div class="form-group">
+                      <label for="tanggal_lahir">Tanggal Lahir</label>
+                      <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" ></input>
+                    </div>
 
                       <div class="form-group">
                         <label for="nik">NIK</label>

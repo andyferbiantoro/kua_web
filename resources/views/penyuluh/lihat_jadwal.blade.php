@@ -38,8 +38,8 @@ Data Jadwal Pra-Nikah
                               <th>Jam</th>
                               <th>Lokasi</th>
                               <th>Aksi</th>
-                              
                               <th style="display: none;">hidden</th>
+                              <th>Status Penyuluhan</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -60,11 +60,28 @@ Data Jadwal Pra-Nikah
                                 @endif
 
                                 @if($data->status == 1)
-                                <button class="btn btn-success btn-sm" title="Ter-Verivikasi">Terverifikasi</button>
+                                <button class="btn btn-outline-success btn-fw" title="Ter-Verivikasi">Terverifikasi</button>
                                 @endif
                               </td>
-                           
                               <td style="display: none;">{{$data->id}}</td>
+
+                              <td>
+                                @if($data->bukti_penyuluhan == null && $data->status_penyuluhan == 0)
+                                 <label>upload bukti penyuluhan untuk menyelesaikan</label>
+                                 <button class="btn btn-warning btn-sm edit" title="Edit">Upload bukti</button>
+                                @endif
+
+                                @if($data->status_penyuluhan == 0 && $data->bukti_penyuluhan != null)
+                                  <a href="#" data-toggle="modal" onclick="finishData({{$data->id}})" data-target="#SelesaikanModal">
+                                    <button class="btn btn-danger btn-sm" >Selesaikan Penyuluhan</button>
+                                  </a>
+                                @endif
+
+                                 @if($data->status_penyuluhan == 1 && $data->bukti_penyuluhan != null)
+                                 <button class="btn btn-outline-success btn-fw" title="Ter-Verivikasi">Penyuluhan Telah Diselesaikan</button>
+                                @endif
+
+                              </td>
 
                             </tr>
                             @endforeach
@@ -105,6 +122,70 @@ Data Jadwal Pra-Nikah
       </div>
     </div> 
 
+
+
+
+    <div id="SelesaikanModal" class="modal fade" role="dialog">
+      <div class="modal-dialog ">
+        <!-- Modal content-->
+        <form action="" id="finishForm" method="post">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Verifikasi Jadwal Pra-Nikah</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              {{ csrf_field() }}
+              {{ method_field('POST') }}
+              <p>Apakah anda yakin ingin menyelesaikan jadal pra-nikah ini ?</p><br>
+              
+              <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Batal</button>
+              <button type="submit" name="" class="btn btn-success float-right mr-2" data-dismiss="modal" onclick="formSubmitFinish()">Selesaikan</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div> 
+
+
+
+
+
+
+    <!-- Modal Update -->
+        <div id="BuktiPenyuluhan" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+           <!--Modal content-->
+           <form action="" id="BuktiPenyuluhanform" method="post" enctype="multipart/form-data">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Upload Bukti Penyuluhan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                {{ csrf_field() }}
+                {{ method_field('POST') }}
+
+                  <div class="form-group">
+                    <div class="form-group">
+                        <label for="bukti_penyuluhan">Bukti Penyuluhan</label>
+                        <input type="file" class="form-control" id="bukti_penyuluhan" name="bukti_penyuluhan"  required=""></input>
+                      </div>
+
+                  </div> 
+                   <div class="modal-footer">
+                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Batal</button>
+                <button type="submit"  class="btn btn-primary float-right mr-2" >Upload</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
   </div>
 
 @endsection 
@@ -121,6 +202,36 @@ Data Jadwal Pra-Nikah
   function formSubmit() {
     $("#deleteForm").submit();
   }
+</script>
+
+<script type="text/javascript">
+  function finishData(id) {
+    var id = id;
+    var url = '{{route("penyuluh_selesaikan_bimbingan", ":id") }}';
+    url = url.replace(':id', id);
+    $("#finishForm").attr('action', url);
+  }
+
+  function formSubmitFinish() {
+    $("#finishForm").submit();
+  }
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    var table = $('#dataTable').DataTable();
+    table.on('click', '.edit', function() {
+      $tr = $(this).closest('tr');
+      if ($($tr).hasClass('child')) {
+        $tr = $tr.prev('.parent');
+      }
+      var data = table.row($tr).data();
+      console.log(data);
+      $('#BuktiPenyuluhanform').attr('action','penyuluh_upload_bukti/'+ data[7]);
+      $('#BuktiPenyuluhan').modal('show');
+    });
+  });
 </script>
 
 

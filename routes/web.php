@@ -85,6 +85,10 @@ Route::group(['middleware' => ['auth', 'penyuluh']],function(){
     Route::post('/penyuluh_materi_update/{id}', 'PenyuluhController@penyuluh_materi_update')->name('penyuluh_materi_update');
     Route::post('/penyuluh_materi_delete/{id}', 'PenyuluhController@penyuluh_materi_delete')->name('penyuluh_materi_delete');
 
+    Route::post('/penyuluh_selesaikan_bimbingan/{id}', 'PenyuluhController@penyuluh_selesaikan_bimbingan')->name('penyuluh_selesaikan_bimbingan');
+    Route::post('/penyuluh_upload_bukti/{id}', 'PenyuluhController@penyuluh_upload_bukti')->name('penyuluh_upload_bukti');
+
+
 
     Route::get('/lihat_jadwal', 'PenyuluhController@lihat_jadwal')->name('lihat_jadwal');
     Route::post('/penyuluh_verifikasi_jadwal/{id}', 'PenyuluhController@penyuluh_verifikasi_jadwal')->name('penyuluh_verifikasi_jadwal');

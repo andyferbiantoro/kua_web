@@ -8,6 +8,6 @@ class WaliNikah extends Model
 {
     protected $table = "wali_nikah";
     protected $fillable = [
-        'nama_lengkap','ttl','nik','kewarganegaraan','agama','pekerjaan','alamat','id_calon_pengantin'
+        'nama_lengkap','tempat_lahir','tanggal_lahir','nik','kewarganegaraan','agama','pekerjaan','alamat','id_calon_pengantin'
     ];
 }

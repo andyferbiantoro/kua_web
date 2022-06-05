@@ -10,6 +10,8 @@ use App\Jadwal;
 use App\Sertifikat;
 use App\MateriBimbingan;
 use App\User;
+use App\Cities;
+use App\Provinces;
 use Auth;
 use File;
 use PDF;
@@ -33,7 +35,11 @@ public function calon_pengantin()
 
     $catin = CalonPengantin::orderBy('id','DESC')->get();
 
-    return view('admin.calon_pengantin.index',compact('catin'));
+    $cities = Cities::orderBy('city_name','ASC')->get();
+    $provinces = Provinces::all();
+
+
+    return view('admin.calon_pengantin.index',compact('catin','provinces','cities'));
 }
 
 
@@ -51,27 +57,59 @@ public function calon_pengantin_add(Request $request){
 
     $lastid = User::create($data)->id;
 
+    $cekemail = User::where('email', $request->email)->first();
 
-    $data_add = CalonPengantin::create([
-     'nik_calon_suami' => $request->nik_calon_suami,
-     'nama_calon_suami' => $request->nama_calon_suami,
-     'no_hp_calon_suami' => $request->no_hp_calon_suami,
-     'email_calon_suami' => $request->email_calon_suami,
-     'alamat_calon_suami' => $request->alamat_calon_suami,
-     'ttl_calon_suami' => $request->ttl_calon_suami,
-     'nik_calon_istri' => $request->nik_calon_istri,
-     'nama_calon_istri' => $request->nama_calon_istri,
-     'no_hp_calon_istri' => $request->no_hp_calon_istri,
-     'email_calon_istri' => $request->email_calon_istri,
-     'alamat_calon_istri' => $request->alamat_calon_istri,
-     'ttl_calon_istri' => $request->ttl_calon_istri,
-     'tanggal_rencana_menikah' => $request->tanggal_rencana_menikah,
-     'id_user' => $lastid,
-     
+    if ($cekemail) {
+         return redirect()->back()->with('error', 'Data Jadwal Sudah Ditambahkan');
+    }else{
 
-      ]);
+     $data_add = new CalonPengantin();
+
+     $data_add->nik_calon_suami = $request->input('nik_calon_suami');
+     $data_add->nama_calon_suami = $request->input('nama_calon_suami');
+     $data_add->no_hp_calon_suami = $request->input('no_hp_calon_suami');
+     $data_add->email_calon_suami = $request->input('email_calon_suami');
+     $data_add->alamat_calon_suami = $request->input('alamat_calon_suami');
+     $data_add->nik_calon_istri = $request->input('nik_calon_istri');
+     $data_add->nama_calon_istri = $request->input('nama_calon_istri');
+     $data_add->no_hp_calon_istri = $request->input('no_hp_calon_istri');
+     $data_add->email_calon_istri = $request->input('email_calon_istri');
+     $data_add->alamat_calon_istri = $request->input('alamat_calon_istri');
+     $data_add->tempat_lahir_calon_suami = $request->input('tempat_lahir_calon_suami');
+     $data_add->tempat_lahir_calon_istri = $request->input('tempat_lahir_calon_istri');
+     $data_add->tanggal_lahir_calon_suami = $request->input('tanggal_lahir_calon_suami');
+     $data_add->tanggal_lahir_calon_istri = $request->input('tanggal_lahir_calon_istri');
+     $data_add->tanggal_rencana_menikah = $request->input('tanggal_rencana_menikah');
+     $data_add->id_user = $lastid;
+
+           
+          
+        if($request->hasFile('foto_calon_suami')){
+            $file = $request->file('foto_calon_suami');
+            $filename = $file->getClientOriginalName();
+            $file->move('uploads/foto_calon_suami/', $filename);
+            $data_add->foto_calon_suami = $filename;
 
 
+        }else{
+            echo "Gagal upload gambar";
+        }
+
+
+         if($request->hasFile('foto_calon_istri')){
+            $file = $request->file('foto_calon_istri');
+            $filename = $file->getClientOriginalName();
+            $file->move('uploads/foto_calon_istri/', $filename);
+            $data_add->foto_calon_istri = $filename;
+
+
+        }else{
+            echo "Gagal upload gambar";
+        }
+          
+    $data_add->save();
+    
+    }
    
 
    return redirect('/calon_pengantin')->with('success', 'Data calon pengantin Baru Berhasil Ditambahkan');
@@ -88,13 +126,15 @@ public function calon_pengantin_update(Request $request, $id)
      'no_hp_calon_suami' => $request->no_hp_calon_suami,
      'email_calon_suami' => $request->email_calon_suami,
      'alamat_calon_suami' => $request->alamat_calon_suami,
-     'ttl_calon_suami' => $request->ttl_calon_suami,
      'nik_calon_istri' => $request->nik_calon_istri,
      'nama_calon_istri' => $request->nama_calon_istri,
      'no_hp_calon_istri' => $request->no_hp_calon_istri,
      'email_calon_istri' => $request->email_calon_istri,
      'alamat_calon_istri' => $request->alamat_calon_istri,
-     'ttl_calon_istri' => $request->ttl_calon_istri,
+     'tempat_lahir_calon_suami' => $request->tempat_lahir_calon_suami,
+     'tempat_lahir_calon_istri' => $request->tempat_lahir_calon_istri,
+     'tanggal_lahir_calon_suami' => $request->tanggal_lahir_calon_suami,
+     'tanggal_lahir_calon_istri' => $request->tanggal_lahir_calon_istri,
      'tanggal_rencana_menikah' => $request->tanggal_rencana_menikah,
 
   ];
@@ -119,8 +159,10 @@ public function wali_nikah()
    {
 
     $wali_nikah = WaliNikah::all();
+    $cities = Cities::orderBy('city_name','ASC')->get();
 
-    return view('admin.wali_nikah.index',compact('wali_nikah'));
+
+    return view('admin.wali_nikah.index',compact('wali_nikah','cities'));
 }
 
 
@@ -130,7 +172,8 @@ public function wali_nikah_add(Request $request){
    $data_add = new WaliNikah();
 
    $data_add->nama_lengkap = $request->input('nama_lengkap');
-   $data_add->ttl = $request->input('ttl');
+   $data_add->tempat_lahir = $request->input('tempat_lahir');
+   $data_add->tanggal_lahir = $request->input('tanggal_lahir');
    $data_add->nik = $request->input('nik');
    $data_add->kewarganegaraan = $request->input('kewarganegaraan');
    $data_add->agama = $request->input('agama');
@@ -152,7 +195,8 @@ public function wali_nikah_update(Request $request, $id)
 
   $input = [
      'nama_lengkap' => $request->nama_lengkap,
-     'ttl' => $request->ttl,
+     'tempat_lahir' => $request->tempat_lahir,
+     'tanggal_lahir' => $request->tanggal_lahir,
      'nik' => $request->nik,
      'kewarganegaraan' => $request->kewarganegaraan,
      'agama' => $request->agama,
@@ -184,8 +228,9 @@ public function kelola_penyuluh()
    {
 
     $penyuluh = Penyuluh::all();
+    $cities = Cities::orderBy('city_name','ASC')->get();
 
-    return view('admin.penyuluh.index',compact('penyuluh'));
+    return view('admin.penyuluh.index',compact('penyuluh','cities'));
 }
 
 
@@ -204,32 +249,21 @@ public function kelola_penyuluh_add(Request $request){
     $lastid = User::create($data)->id;
 
     $data_add = Penyuluh::create([
-     'jenis_penyuluh' => $request->jenis_penyuluh,
      'nik_penyuluh' => $request->nik_penyuluh,
      'nama_pegawai' => $request->nama_pegawai,
-     'gelar_depan' => $request->gelar_depan,
-     'gelar_belakang' => $request->gelar_belakang,
-     'tempat_tanggal_lahir' => $request->tempat_tanggal_lahir,
+     'tempat_lahir' => $request->tempat_lahir,
+     'tanggal_lahir' => $request->tanggal_lahir,
      'jenis_kelamin' => $request->jenis_kelamin,
      'agama' => $request->agama,
-     'status_keluarga' => $request->status_keluarga,
      'pendidikan_formal' => $request->pendidikan_formal,
-     'bidang_keahlian' => $request->bidang_keahlian,
-     'unit_kerja' => $request->unit_kerja,
-     'tempat_tugas' => $request->tempat_tugas,
-     'wilayah_kerja' => $request->wilayah_kerja,
-     'diklat_fungsional' => $request->diklat_fungsional,
-     'jenjang_jabatan' => $request->jenjang_jabatan,
-     'tanggal_sk_cpns' => $request->tanggal_sk_cpns,
-     'masa_kerja_berdasarkan_skpp' => $request->masa_kerja_berdasarkan_skpp,
      'alamat_rumah' => $request->alamat_rumah,
-     'kabupaten' => $request->kabupaten,
-     'provinsi' => $request->provinsi,
      'no_telp' => $request->no_telp,
      'alamat_email' => $request->alamat_email,
      'id_user' => $lastid,
 
       ]);
+
+
 
 
    return redirect('/penyuluh')->with('success', 'Data penyuluh Baru Berhasil Ditambahkan');
@@ -242,27 +276,14 @@ public function kelola_penyuluh_update(Request $request, $id)
   $data_update = Penyuluh::where('id', $id)->first();
 
   $input = [
-     'jenis_penyuluh' => $request->jenis_penyuluh,
      'nik_penyuluh' => $request->nik_penyuluh,
      'nama_pegawai' => $request->nama_pegawai,
-     'gelar_depan' => $request->gelar_depan,
-     'gelar_belakang' => $request->gelar_belakang,
-     'tempat_tanggal_lahir' => $request->tempat_tanggal_lahir,
+     'tempat_lahir' => $request->tempat_lahir,
+     'tanggal_lahir' => $request->tanggal_lahir,
      'jenis_kelamin' => $request->jenis_kelamin,
      'agama' => $request->agama,
-     'status_keluarga' => $request->status_keluarga,
      'pendidikan_formal' => $request->pendidikan_formal,
-     'bidang_keahlian' => $request->bidang_keahlian,
-     'unit_kerja' => $request->unit_kerja,
-     'tempat_tugas' => $request->tempat_tugas,
-     'wilayah_kerja' => $request->wilayah_kerja,
-     'diklat_fungsional' => $request->diklat_fungsional,
-     'jenjang_jabatan' => $request->jenjang_jabatan,
-     'tanggal_sk_cpns' => $request->tanggal_sk_cpns,
-     'masa_kerja_berdasarkan_skpp' => $request->masa_kerja_berdasarkan_skpp,
      'alamat_rumah' => $request->alamat_rumah,
-     'kabupaten' => $request->kabupaten,
-     'provinsi' => $request->provinsi,
      'no_telp' => $request->no_telp,
      'alamat_email' => $request->alamat_email,
      'id_user' => $request->id_user,
@@ -309,21 +330,28 @@ public function jadwal()
 
 public function jadwal_add(Request $request){
 
-   $data_add = new Jadwal();
 
-   $data_add->id_user_penyuluh = $request->input('id_user_penyuluh');
-   $data_add->id_calon_pengantin = $request->input('id_calon_pengantin');
-   $data_add->tanggal = $request->input('tanggal');
-   $data_add->jam = $request->input('jam');
-   $data_add->lokasi = $request->input('lokasi');
-   $data_add->status = 0 ;
-  
-  
+        $cekjadwal = Jadwal::where('id_calon_pengantin', $request->id_calon_pengantin)->first();
+        // $cekjadwal_selesai = Jadwal::where('id_calon_pengantin', $request->id_calon_pengantin)->where('status_selesai','1')->first();
 
-  
-   $data_add->save();
+        if ($cekjadwal) {
+
+            return redirect()->back()->with('error', 'Data Jadwal Sudah Ditambahkan');
+
+       }else{    
+           $data_add = new Jadwal();
+
+           $data_add->id_user_penyuluh = $request->input('id_user_penyuluh');
+           $data_add->id_calon_pengantin = $request->input('id_calon_pengantin');
+           $data_add->tanggal = $request->input('tanggal');
+           $data_add->jam = $request->input('jam');
+           $data_add->lokasi = $request->input('lokasi');
+           $data_add->status = 0 ;
+          
+           $data_add->save();
 
    return redirect('/jadwal')->with('success', 'Data Jadwal Baru Berhasil Ditambahkan');
+    }
 }
 
 public function jadwal_update(Request $request, $id)
@@ -369,7 +397,7 @@ public function sertifikat()
 
     $sertifikat = DB::table('sertifikat')
       ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri')
+      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.tempat_lahir_calon_suami','calon_pengantin.tempat_lahir_calon_istri','calon_pengantin.tanggal_lahir_calon_suami','calon_pengantin.tanggal_lahir_calon_istri')
       ->orderBy('sertifikat.id','DESC')
       ->get();
 
@@ -474,7 +502,7 @@ public function lihat_sertifikat_suami($id)
 
     $sertifikat = DB::table('sertifikat')
       ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.tempat_lahir_calon_suami','calon_pengantin.tempat_lahir_calon_istri','calon_pengantin.tanggal_lahir_calon_suami','calon_pengantin.tanggal_lahir_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri','calon_pengantin.foto_calon_suami','calon_pengantin.foto_calon_istri')
       ->orderBy('sertifikat.id','DESC')
       ->where('sertifikat.id',$id)
       ->get();
@@ -498,7 +526,7 @@ public function lihat_sertifikat_istri($id)
 
     $sertifikat = DB::table('sertifikat')
       ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.tempat_lahir_calon_suami','calon_pengantin.tempat_lahir_calon_istri','calon_pengantin.tanggal_lahir_calon_suami','calon_pengantin.tanggal_lahir_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri','calon_pengantin.foto_calon_suami','calon_pengantin.foto_calon_istri')
       ->orderBy('sertifikat.id','DESC')
       ->where('sertifikat.id',$id)
       ->get();
@@ -524,7 +552,7 @@ public function cetak_sertifikat_suami($id)
 
   $sertifikat = DB::table('sertifikat')
       ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.tempat_lahir_calon_suami','calon_pengantin.tempat_lahir_calon_istri','calon_pengantin.tanggal_lahir_calon_suami','calon_pengantin.tanggal_lahir_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri','calon_pengantin.foto_calon_suami','calon_pengantin.foto_calon_istri')
       ->orderBy('sertifikat.id','DESC')
       ->where('sertifikat.id',$id)
       ->get();
@@ -554,7 +582,7 @@ public function cetak_sertifikat_istri($id)
 
   $sertifikat = DB::table('sertifikat')
       ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.tempat_lahir_calon_suami','calon_pengantin.tempat_lahir_calon_istri','calon_pengantin.tanggal_lahir_calon_suami','calon_pengantin.tanggal_lahir_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri','calon_pengantin.foto_calon_suami','calon_pengantin.foto_calon_istri')
       ->orderBy('sertifikat.id','DESC')
       ->where('sertifikat.id',$id)
       ->get();
@@ -596,16 +624,33 @@ public function materi()
 }
 
 
-public function laporan()
+public function laporan(Request $request) 
    {
 
-      $laporan = DB::table('sertifikat')
-     ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-     ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
-     ->orderBy('sertifikat.id','DESC')
-     ->get();
+    $from = $request->from;
+    $to = $request->to;
 
-    return view('admin.laporan.index',compact('laporan'));
+    if ($from == null && $to == null) {
+      $laporan = DB::table('jadwal')
+      ->join('calon_pengantin' , 'jadwal.id_calon_pengantin', '=' , 'calon_pengantin.id')
+      ->select('jadwal.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+      ->orderBy('jadwal.id','DESC')
+      ->get();
+
+        
+    }else{
+        $laporan = DB::table('jadwal')
+        ->join('calon_pengantin' , 'jadwal.id_calon_pengantin', '=' , 'calon_pengantin.id')
+        ->select('jadwal.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+        ->orderBy('jadwal.id','DESC')
+        ->whereBetween('jadwal.tanggal', [$from, $to])
+        ->get();
+    }
+      $jml_daftar = Jadwal::whereBetween('tanggal', [$from, $to])->count();
+      $jml_terlaksana = Jadwal::where('status_penyuluhan','1')->whereBetween('tanggal', [$from, $to])->count();
+      $jml_tdk_terlaksana = Jadwal::where('status_penyuluhan','0')->whereBetween('tanggal', [$from, $to])->count();
+
+    return view('admin.laporan.index',compact('laporan','from','to','jml_daftar','jml_terlaksana','jml_tdk_terlaksana'));
 }
 
 

@@ -28,7 +28,7 @@ class KepalaKuaController extends Controller
 
     $sertifikat = DB::table('sertifikat')
       ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri')
+      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.tempat_lahir_calon_suami','calon_pengantin.tempat_lahir_calon_istri','calon_pengantin.tanggal_lahir_calon_suami','calon_pengantin.tanggal_lahir_calon_istri','calon_pengantin.foto_calon_suami','calon_pengantin.foto_calon_istri')
       ->orderBy('sertifikat.id','DESC')
       ->get();
 
@@ -51,16 +51,33 @@ public function verifikasi_sertifikat($id)
 }
 
 
-public function lihat_laporan()
+public function lihat_laporan(Request $request)
    {
 
-      $laporan = DB::table('sertifikat')
-     ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-     ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
-     ->orderBy('sertifikat.id','DESC')
-     ->get();
+      $from = $request->from;
+    $to = $request->to;
 
-    return view('kepala_kua.laporan',compact('laporan'));
+    if ($from == null && $to == null) {
+      $laporan = DB::table('jadwal')
+      ->join('calon_pengantin' , 'jadwal.id_calon_pengantin', '=' , 'calon_pengantin.id')
+      ->select('jadwal.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+      ->orderBy('jadwal.id','DESC')
+      ->get();
+
+        
+    }else{
+        $laporan = DB::table('jadwal')
+        ->join('calon_pengantin' , 'jadwal.id_calon_pengantin', '=' , 'calon_pengantin.id')
+        ->select('jadwal.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+        ->orderBy('jadwal.id','DESC')
+        ->whereBetween('jadwal.tanggal', [$from, $to])
+        ->get();
+    }
+      $jml_daftar = Jadwal::whereBetween('tanggal', [$from, $to])->count();
+      $jml_terlaksana = Jadwal::where('status_penyuluhan','1')->whereBetween('tanggal', [$from, $to])->count();
+      $jml_tdk_terlaksana = Jadwal::where('status_penyuluhan','0')->whereBetween('tanggal', [$from, $to])->count();
+
+    return view('kepala_kua.laporan',compact('laporan','from','to','jml_daftar','jml_terlaksana','jml_tdk_terlaksana'));
 }
 
 
@@ -70,7 +87,7 @@ public function kepala_kua_lihat_sertifikat_suami($id)
 
     $sertifikat = DB::table('sertifikat')
       ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.tempat_lahir_calon_suami','calon_pengantin.tempat_lahir_calon_istri','calon_pengantin.tanggal_lahir_calon_suami','calon_pengantin.tanggal_lahir_calon_istri','calon_pengantin.foto_calon_suami','calon_pengantin.foto_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri','calon_pengantin.foto_calon_suami','calon_pengantin.foto_calon_istri')
       ->orderBy('sertifikat.id','DESC')
       ->where('sertifikat.id',$id)
       ->get();
@@ -93,7 +110,7 @@ public function kepala_kua_lihat_sertifikat_istri($id)
 
     $sertifikat = DB::table('sertifikat')
       ->join('calon_pengantin' , 'sertifikat.id_calon_pengantin', '=' , 'calon_pengantin.id')
-      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.ttl_calon_suami','calon_pengantin.ttl_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri')
+      ->select('sertifikat.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','calon_pengantin.tempat_lahir_calon_suami','calon_pengantin.tempat_lahir_calon_istri','calon_pengantin.tanggal_lahir_calon_suami','calon_pengantin.tanggal_lahir_calon_istri','calon_pengantin.foto_calon_suami','calon_pengantin.foto_calon_istri','calon_pengantin.nik_calon_suami','calon_pengantin.nik_calon_istri','calon_pengantin.alamat_calon_suami','calon_pengantin.alamat_calon_istri','calon_pengantin.foto_calon_suami','calon_pengantin.foto_calon_istri')
       ->orderBy('sertifikat.id','DESC')
       ->where('sertifikat.id',$id)
       ->get();

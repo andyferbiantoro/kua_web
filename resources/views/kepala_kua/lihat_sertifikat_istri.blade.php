@@ -34,7 +34,7 @@ Sertifikat Calon istri
               </div>
               <div class="col-md-1">:</div>
               <div class="col-md-4">
-                {{$data->ttl_calon_istri}}
+                {{$data->tempat_lahir_calon_istri}}, {{date("j F Y", strtotime($data->tanggal_lahir_calon_istri))}}
               </div>
             </div>
 

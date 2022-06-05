@@ -40,8 +40,9 @@ Data Jadwal Pra-Nikah
                               <th>Jam</th>
                               <th>Lokasi</th>
                               <th>Aksi</th>
-                              
                               <th style="display: none;">hidden</th>
+                              <th>Status Jadwal</th>
+                              <th>Status Penyuluhan</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -61,8 +62,28 @@ Data Jadwal Pra-Nikah
                                   <button class="btn btn-danger btn-sm icon-trash menu-icon" title="Hapus"></button>
                                 </a>
                               </td>
-                           
                               <td style="display: none;">{{$data->id}}</td>
+                              <td>
+                                @if($data->status == 0)
+                                <button class="btn btn-outline-warning btn-fw" >Menunggu Verifikasi</button>
+
+                                @endif
+
+                                @if($data->status == 1)
+                                <button class="btn btn-outline-success btn-fw" >Sudah Terverifikasi</button>
+                                @endif
+                              </td>
+
+                              <td>
+                                @if($data->status_penyuluhan == 0)
+                                <button class="btn btn-outline-warning btn-fw" >Penyuluhan Masih Berlangsung</button>
+
+                                @endif
+
+                                @if($data->status_penyuluhan == 1)
+                                <button class="btn btn-outline-success btn-fw" >Penyuluhan Selesai</button>
+                                @endif
+                              </td>
 
                             </tr>
                             @endforeach
