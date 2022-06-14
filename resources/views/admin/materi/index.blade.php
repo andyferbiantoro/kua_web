@@ -43,11 +43,11 @@ Data Materi Pra-Nikah
                           </thead>
                           <tbody>
                              @php $no=1 @endphp
-                              @foreach($materi as $data)
+                              @foreach($bimbingan as $data)
                             <tr>
                               <td>{{$no++}}</td>
                               <td>{{$data->nama_pegawai}}</td>
-                              <td>{{$data->nama_materi }}</td>
+                              <td>{{$data->list_nama_materi }}</td>
                               <td>{{$data->nama_calon_suami }} dan {{$data->nama_calon_istri }}</td>
                             
                     

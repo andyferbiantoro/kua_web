@@ -47,7 +47,7 @@ Data Sertifikat Calon Pengantin
                               <td>{{$no++}}</td>
                               <td>{{$data->nama_calon_suami}} dan {{$data->nama_calon_istri}}</td>
                               <td> <a href="{{ route('kepala_kua_lihat_sertifikat_suami',$data->id) }}"><button class="btn btn-success ">Lihat Sertifikat</button></a> </td>
-                              <td> <a href="{{ route('kepala_kua_lihat_sertifikat_suami',$data->id) }}"><button class="btn btn-success ">Lihat Sertifikat</button></a> </td>
+                              <td> <a href="{{ route('kepala_kua_lihat_sertifikat_istri',$data->id) }}"><button class="btn btn-success ">Lihat Sertifikat</button></a> </td>
                               
                               <td>
                                 @if($data->status == 0)

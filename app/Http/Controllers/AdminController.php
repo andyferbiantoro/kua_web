@@ -9,6 +9,8 @@ use App\Penyuluh;
 use App\Jadwal;
 use App\Sertifikat;
 use App\MateriBimbingan;
+use App\Bimbingan;
+use App\DetailBimbingan;
 use App\User;
 use App\Cities;
 use App\Provinces;
@@ -509,15 +511,22 @@ public function lihat_sertifikat_suami($id)
 
        $cek_sertifikat = Sertifikat::where('id',$id)->first();
     
-       $materi = DB::table('materi_bimbingan')
-       ->join('calon_pengantin', 'materi_bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
-       ->select('materi_bimbingan.*')
-       ->where('materi_bimbingan.id_calon_pengantin', $cek_sertifikat->id_calon_pengantin)
-       ->orderBy('materi_bimbingan.id','DESC')
-       ->get();
+       $materi_bimbingan = Bimbingan::where('id_calon_pengantin',$cek_sertifikat->id_calon_pengantin)->get();
+
+       foreach ($materi_bimbingan as $key => $value) {
+           $detail_bimbingan = DB::table('detail_bimbingan')
+           ->join('bimbingan', 'detail_bimbingan.id_bimbingan', '=', 'bimbingan.id')
+           ->join('materi_bimbingan', 'detail_bimbingan.id_materi_bimbingan', '=', 'materi_bimbingan.id')
+           ->join('calon_pengantin', 'bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+           ->select('materi_bimbingan.nama_materi','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
+           ->where('id_bimbingan', $value->id)
+           ->orderBy('detail_bimbingan.id','DESC')
+           ->get();
+           
+     }
 
 
-    return view('admin.sertifikat.sertifikat_suami',compact('sertifikat','materi'));
+    return view('admin.sertifikat.sertifikat_suami',compact('sertifikat','detail_bimbingan'));
 }
 
 public function lihat_sertifikat_istri($id)
@@ -532,17 +541,28 @@ public function lihat_sertifikat_istri($id)
       ->get();
 
 
-     $cek_sertifikat = Sertifikat::where('id',$id)->first();
-    
-       $materi = DB::table('materi_bimbingan')
-       ->join('calon_pengantin', 'materi_bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
-       ->select('materi_bimbingan.*')
-       ->where('materi_bimbingan.id_calon_pengantin', $cek_sertifikat->id_calon_pengantin)
-       ->orderBy('materi_bimbingan.id','DESC')
-       ->get();
+      $cek_sertifikat = Sertifikat::where('id',$id)->first();
+      
+
+      $materi_bimbingan = Bimbingan::where('id_calon_pengantin',$cek_sertifikat->id_calon_pengantin)->get();
+
+      foreach ($materi_bimbingan as $key => $value) {
+         $detail_bimbingan = DB::table('detail_bimbingan')
+         ->join('bimbingan', 'detail_bimbingan.id_bimbingan', '=', 'bimbingan.id')
+         ->join('materi_bimbingan', 'detail_bimbingan.id_materi_bimbingan', '=', 'materi_bimbingan.id')
+         ->join('calon_pengantin', 'bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+         ->select('materi_bimbingan.nama_materi','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
+         ->where('id_bimbingan', $value->id)
+         ->orderBy('detail_bimbingan.id','DESC')
+         ->get();
+
+         
+         
+     }
+        //eturn $detail_bimbingan;
 
 
-    return view('admin.sertifikat.sertifikat_istri',compact('sertifikat','materi'));
+    return view('admin.sertifikat.sertifikat_istri',compact('sertifikat','detail_bimbingan'));
 }
 
 
@@ -559,18 +579,27 @@ public function cetak_sertifikat_suami($id)
 
       $cek_sertifikat = Sertifikat::where('id',$id)->first();
 
-      $materi = DB::table('materi_bimbingan')
-      ->join('calon_pengantin', 'materi_bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
-      ->select('materi_bimbingan.*')
-      ->where('materi_bimbingan.id_calon_pengantin', $cek_sertifikat->id_calon_pengantin)
-      ->orderBy('materi_bimbingan.id','DESC')
-      ->get();
+       $materi_bimbingan = Bimbingan::where('id_calon_pengantin',$cek_sertifikat->id_calon_pengantin)->get();
+
+      foreach ($materi_bimbingan as $key => $value) {
+         $detail_bimbingan = DB::table('detail_bimbingan')
+         ->join('bimbingan', 'detail_bimbingan.id_bimbingan', '=', 'bimbingan.id')
+         ->join('materi_bimbingan', 'detail_bimbingan.id_materi_bimbingan', '=', 'materi_bimbingan.id')
+         ->join('calon_pengantin', 'bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+         ->select('materi_bimbingan.nama_materi','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
+         ->where('id_bimbingan', $value->id)
+         ->orderBy('detail_bimbingan.id','DESC')
+         ->get();
+
+         
+         
+     }
 
 //return $sertifikat;
   view()->share('sertifikat', $sertifikat);
-  view()->share('materi', $materi);
+  view()->share('detail_bimbingan', $detail_bimbingan);
   
-  $pdf = PDF::loadview('admin.sertifikat.cetak.cetak_sertifikat_suami', ['sertifikat' => $sertifikat],['materi' => $materi])->setPaper('A4','landscape');
+  $pdf = PDF::loadview('admin.sertifikat.cetak.cetak_sertifikat_suami', ['sertifikat' => $sertifikat],['detail_bimbingan' => $detail_bimbingan])->setPaper('A4','landscape');
 
   return $pdf->stream('sertifikat_suami.pdf');
 
@@ -589,18 +618,27 @@ public function cetak_sertifikat_istri($id)
 
       $cek_sertifikat = Sertifikat::where('id',$id)->first();
 
-      $materi = DB::table('materi_bimbingan')
-      ->join('calon_pengantin', 'materi_bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
-      ->select('materi_bimbingan.*')
-      ->where('materi_bimbingan.id_calon_pengantin', $cek_sertifikat->id_calon_pengantin)
-      ->orderBy('materi_bimbingan.id','DESC')
-      ->get();
+       $materi_bimbingan = Bimbingan::where('id_calon_pengantin',$cek_sertifikat->id_calon_pengantin)->get();
+
+      foreach ($materi_bimbingan as $key => $value) {
+         $detail_bimbingan = DB::table('detail_bimbingan')
+         ->join('bimbingan', 'detail_bimbingan.id_bimbingan', '=', 'bimbingan.id')
+         ->join('materi_bimbingan', 'detail_bimbingan.id_materi_bimbingan', '=', 'materi_bimbingan.id')
+         ->join('calon_pengantin', 'bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+         ->select('materi_bimbingan.nama_materi','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
+         ->where('id_bimbingan', $value->id)
+         ->orderBy('detail_bimbingan.id','DESC')
+         ->get();
+
+         
+         
+     }
 
 //return $sertifikat;
   view()->share('sertifikat', $sertifikat);
-  view()->share('materi', $materi);
+  view()->share('detail_bimbingan', $detail_bimbingan);
 
-  $pdf = PDF::loadview('admin.sertifikat.cetak.cetak_sertifikat_istri', ['sertifikat' => $sertifikat],['materi' => $materi])->setPaper('A4','landscape');
+  $pdf = PDF::loadview('admin.sertifikat.cetak.cetak_sertifikat_istri', ['sertifikat' => $sertifikat],['detail_bimbingan' => $detail_bimbingan])->setPaper('A4','landscape');
 
   return $pdf->stream('sertifikat_istri.pdf');
 
@@ -612,15 +650,37 @@ public function cetak_sertifikat_istri($id)
 public function materi()
    {
 
-      $materi = DB::table('materi_bimbingan')
-      ->join('penyuluh' , 'materi_bimbingan.id_user_penyuluh', '=' , 'penyuluh.id_user')
-      ->join('calon_pengantin' , 'materi_bimbingan.id_calon_pengantin', '=' , 'calon_pengantin.id')
-      ->select('materi_bimbingan.*','penyuluh.nama_pegawai','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
-      ->orderBy('materi_bimbingan.id','DESC')
-      ->get();
+      // $materi = DB::table('materi_bimbingan')
+      // ->join('penyuluh' , 'materi_bimbingan.id_user_penyuluh', '=' , 'penyuluh.id_user')
+      // ->join('calon_pengantin' , 'materi_bimbingan.id_calon_pengantin', '=' , 'calon_pengantin.id')
+      // ->select('materi_bimbingan.*','penyuluh.nama_pegawai','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
+      // ->orderBy('materi_bimbingan.id','DESC')
+      // ->get();
 
-     // return $materi;
-    return view('admin.materi.index',compact('materi'));
+      $bimbingan = DB::table('bimbingan')
+           ->join('calon_pengantin', 'bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+           ->join('penyuluh', 'bimbingan.id_user_penyuluh', '=', 'penyuluh.id_user')
+           ->select('bimbingan.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri','penyuluh.nama_pegawai')
+           ->orderBy('bimbingan.id','DESC')
+           ->get();
+
+        foreach ($bimbingan as $key => $value) {
+           $detail_bimbingan = DB::table('detail_bimbingan')
+           ->join('bimbingan', 'detail_bimbingan.id_bimbingan', '=', 'bimbingan.id')
+           ->join('materi_bimbingan', 'detail_bimbingan.id_materi_bimbingan', '=', 'materi_bimbingan.id')
+           ->join('calon_pengantin', 'bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+           ->select('materi_bimbingan.nama_materi','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
+           ->where('id_bimbingan', $value->id)
+           ->orderBy('detail_bimbingan.id','DESC')
+           ->get();
+
+            $list_nama_materi = collect($detail_bimbingan)->implode('nama_materi', ', ');
+            $value->list_nama_materi =$list_nama_materi;
+        }
+
+        //return $bimbingan;
+   
+    return view('admin.materi.index',compact('bimbingan'));
 }
 
 

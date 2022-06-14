@@ -222,7 +222,7 @@ Data Penyuluh
                       <div class="form-group">
                         <label for="nama_pegawai">Nama Pegawai</label>
                         <input type="text" class="form-control" id="nama_pegawai_update" name="nama_pegawai"  required="" onkeypress="return event.charCode < 48 || event.charCode  >57"></input>
-                      </div>
+                      </div>  
 
                      
 

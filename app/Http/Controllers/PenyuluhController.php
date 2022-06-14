@@ -9,6 +9,8 @@ use App\Penyuluh;
 use App\Jadwal;
 use App\Sertifikat;
 use App\MateriBimbingan;
+use App\Bimbingan;
+use App\DetailBimbingan;
 use App\User;
 use Auth;
 use File;
@@ -24,49 +26,91 @@ class PenyuluhController extends Controller
     {
 
         $pengantin = CalonPengantin::orderBy('id', 'DESC')->get();
+        $materi = MateriBimbingan::all();
         //$materi = MateriBimbingan::where('id_user_penyuluh',Auth::user()->id)->get();
+        //$bimbingan = Bimbingan::orderBy('id','DESC')->get();
+        $bimbingan = DB::table('bimbingan')
+           ->join('calon_pengantin', 'bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+           ->select('bimbingan.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
+           ->orderBy('bimbingan.id','DESC')
+           ->where('bimbingan.id_user_penyuluh',Auth::user()->id)
+           ->get();
 
-        $materi = DB::table('materi_bimbingan')
-        ->join('calon_pengantin' , 'materi_bimbingan.id_calon_pengantin', '=' , 'calon_pengantin.id')
-        ->select('materi_bimbingan.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
-        ->orderBy('materi_bimbingan.id','DESC')
-        ->where('id_user_penyuluh', Auth::user()->id)
-        ->get();
+        foreach ($bimbingan as $key => $value) {
+           $detail_bimbingan = DB::table('detail_bimbingan')
+           ->join('bimbingan', 'detail_bimbingan.id_bimbingan', '=', 'bimbingan.id')
+           ->join('materi_bimbingan', 'detail_bimbingan.id_materi_bimbingan', '=', 'materi_bimbingan.id')
+           ->join('calon_pengantin', 'bimbingan.id_calon_pengantin', '=', 'calon_pengantin.id')
+           ->select('materi_bimbingan.nama_materi','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
+           ->where('id_bimbingan', $value->id)
+           ->orderBy('detail_bimbingan.id','DESC')
+           ->get();
 
-        return view('penyuluh.index',compact('materi','pengantin'));
+            $list_nama_materi = collect($detail_bimbingan)->implode('nama_materi', ', ');
+            $value->list_nama_materi =$list_nama_materi;
+        }
+
+        //return $bimbingan;
+        // $data_bimbingan = DB::table('detail_bimbingan')
+        // ->join('calon_pengantin' , 'materi_bimbingan.id_calon_pengantin', '=' , 'calon_pengantin.id')
+        // ->select('materi_bimbingan.*','calon_pengantin.nama_calon_suami','calon_pengantin.nama_calon_istri')
+        // ->orderBy('materi_bimbingan.id','DESC')
+        // ->where('id_user_penyuluh', Auth::user()->id)
+        // ->get();
+
+        return view('penyuluh.index',compact('materi','pengantin','bimbingan'));
     }
 
     public function penyuluh_materi_add(Request $request){
 
-     $data_add = new MateriBimbingan();
-
-     $data_add->nama_materi = $request->input('nama_materi');
-     $data_add->id_calon_pengantin = $request->input('id_calon_pengantin');
-     $data_add->id_user_penyuluh = Auth::user()->id;
-     $data_add->status = 1;
-
+     
+      $data = ([
+      'id_calon_pengantin' => $request->id_calon_pengantin,
+      'id_user_penyuluh' => $request->id_user_penyuluh,
+      'status' => 1,
 
 
+  ]);
 
-     $data_add->save();
+    $lastid = Bimbingan::create($data)->id;
 
-     return redirect('/jadwal')->with('success', 'Data Jadwal Baru Berhasil Ditambahkan');
+
+    foreach ($request->id_materi_bimbingan as $key => $value) {
+
+      $data_detail = DetailBimbingan::create([
+          'id_bimbingan' => $lastid,
+          'id_materi_bimbingan' => $value,
+
+      ]);
+  }
+
+     return redirect()->back()->with('success', 'Data materi Baru Berhasil Ditambahkan');
  }
 
  public function penyuluh_materi_update(Request $request, $id)
  {
 
-  $data_update = MateriBimbingan::where('id', $id)->first();
+   // $data_update = Bimbingan::where('id', $id)->first();
 
-  $input = [
-     'nama_materi' => $request->nama_materi,
+   //  $input = [
+   //     'nama_personel' => $request->nama_personel,
+   //     'hasil_sebelum' => $request->hasil_sebelum,
+   //     'hasil_saat' => $request->hasil_saat,
+   //     'hasil_setelah' => $request->hasil_setelah,
+   // ];
 
+   // $data_update->update($input);
 
+   $delete = DetailBimbingan::where('id_bimbingan',$id);
+   $delete->delete();
 
+   foreach ($request->id_materi_bimbingan as $key => $value) {
 
- ];
-
- $data_update->update($input);
+      $data_detail = DetailBimbingan::create([
+          'id_materi_bimbingan' => $value,
+          'id_bimbingan' => $id,
+      ]);
+  }
 
  return redirect()->back()->with('success', 'Data Jadwal Berhasil Diupdate');
 }
@@ -74,8 +118,14 @@ class PenyuluhController extends Controller
 
 public function penyuluh_materi_delete($id)
 {
-  $delete = MateriBimbingan::findOrFail($id);
-  $delete->delete();
+  $detail_bimbingan = DetailBimbingan::where('id_bimbingan',$id)->get();
+  foreach ($detail_bimbingan as $delete_detail) {
+        $delete_detail->delete();
+        
+    }
+
+    $delete = Bimbingan::findOrFail($id);
+    $delete->delete();
 
   return  redirect()->back()->with('success', 'Data Jadwal Berhasil Dihapus');
 }
@@ -98,7 +148,7 @@ public function penyuluh_selesaikan_bimbingan(Request $request, $id)
    $data_add->tanggal_akhir = $tanggal_akhir;
    $data_add->tanggal_terbit = $tanggal_akhir;
    $data_add->nama_kepala_kua = 'MUTAIN HAKIM, S.Ag, M.HI';
-   $data_add->nip = '123123123213';
+   $data_add->nip = '197501252000031001';
    $data_add->id_calon_pengantin = $id_catin->id;
    $data_add->status = 0 ;
 

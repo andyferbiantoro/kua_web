@@ -25,6 +25,11 @@ td {
   vertical-align: middle;
   text-align: center;
 }
+
+p {
+   margin: 0px;
+   padding: 0px;
+}
 </style>
 
 
@@ -38,8 +43,26 @@ td {
         <div class="row">
           <div class="col-12">
 
-            <img src="../public/uploads/logo_kua/logo_kua.jpg" style="width: 70px; height: auto; margin-left: 46%; position: relative;"></p>
-            <br>
+             <div class="row">
+          <div class="col-12">
+            <div class="row" >
+              <!-- <div class="col-md-1"></div> -->
+              <div class="col-md-4">
+                <img src="../public/uploads/logo_kua/logo_kua.jpg" style="width: 90px; height: auto; margin-left: 10%; position: absolute;"></p>  
+              </div>
+              <div class="col-md-8">
+                <h2 style="text-align:center; line-height: 0; margin-bottom: 3px;">KEMENTERIAN AGAMA REPUBLIK INDONESIA</h2>
+                <p style="text-align:center">
+                <b >KANTOR KEMENTERIAN AGAMA REPUBLIK INDONESIA</b><br>
+                <b >KANTOR URUSAN AGAMA KECAMATAN SRONO</b><br>
+                <i >Jalan Raya Rogojampi No. 55 (0333)396833</i><br>
+                </p>
+              </div>
+              <!-- <div class="col-md-1"></div> -->
+            </div>
+            <hr>
+
+
             <h2 style="text-align: center;">SERTIFIKAT</h2>
             @foreach($sertifikat as $data)
             <h5 style="text-align: center;">Nomor : {{$data->nomor}}/Kua.13.30.14/Pw.00/XII/2021</h5>
@@ -108,7 +131,7 @@ td {
             </thead>
             <tbody>
               @php $no=1 @endphp
-              @foreach($materi as $data)
+              @foreach($detail_bimbingan as $data)
               <tr>
                 <td style="text-align: center;">{{$no++ }}</td>
                 <td style="text-align: center;">{{$data->nama_materi }}</td>

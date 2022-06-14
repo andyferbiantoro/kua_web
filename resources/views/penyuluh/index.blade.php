@@ -43,10 +43,10 @@ Data Materi Pra-Nikah
                           </thead>
                           <tbody>
                              @php $no=1 @endphp
-                              @foreach($materi as $data)
+                              @foreach($bimbingan as $data)
                             <tr>
                               <td>{{$no++}}</td>
-                              <td>{{$data->nama_materi}}</td>
+                              <td>{{$data->list_nama_materi}}</td>
                               <td>{{$data->nama_calon_suami}} dan {{$data->nama_calon_istri}}</td>
                               <td>
                                 <button class="btn btn-success btn-sm icon-file menu-icon edit" title="Edit"></button>
@@ -94,10 +94,17 @@ Data Materi Pra-Nikah
                       </select><br>
                     </div>
 
-                      <div class="form-group">
-                        <label for="nama_materi">Nama Materi</label>
-                        <input type="text" class="form-control" id="nama_materi" name="nama_materi" required=""></input>
+                    <div class="form-group">
+                      <label>Materi Bimbingan</label>
+                      @foreach($materi as $data)
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{$data->id}}" id="{{$data->id}}" name="id_materi_bimbingan[]">
+                        <label class="form-check-label" for="{{$data->id}}">
+                          {{$data->nama_materi}}
+                        </label>
                       </div>
+                      @endforeach
+                    </div>
                      
                       <div class="form-group">
                         <input type="hidden" class="form-control" id="id_user_penyuluh" name="id_user_penyuluh" value="{{ Auth::user()->id }}" />
@@ -137,15 +144,19 @@ Data Materi Pra-Nikah
 
               
 
-                       <div class="form-group">
-                        <label for="nama_materi">Nama Materi</label>
-                        <input type="text" class="form-control" id="nama_materi_update" name="nama_materi" required=""></input>
+                    <div class="form-group" style="margin-left:20px">
+                      <label id="detail_materi_update">Materi Bimbingan</label>
+                      @foreach($materi as $data)
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{$data->id}}" id="detail_materi_update" name="id_materi_bimbingan[]">
+                        <label class="form-check-label" for="{{$data->id}}">
+                          {{$data->nama_materi}}
+                        </label>
                       </div>
-                     
-                     <!--  <div class="form-group">
-                        <input type="hidden" class="form-control" id="id_user_penyuluh" name="id_user_penyuluh" value="{{ Auth::user()->id }}" />
-                      </div> -->
+                      @endforeach
+                    </div>
 
+                     
                   </div> 
                    <div class="modal-footer">
                 <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Batal</button>
@@ -211,7 +222,7 @@ Data Materi Pra-Nikah
       var data = table.row($tr).data();
       console.log(data);
       $('#nama_materi_update').val(data[1]);
-      $('#updateInformasiform').attr('action','penyuluh_materi_update/'+ data[3]);
+      $('#updateInformasiform').attr('action','penyuluh_materi_update/'+ data[4]);
       $('#updateInformasi').modal('show');
     });
   });

@@ -19,8 +19,24 @@ Sertifikat Calon Suami
         <div class="row">
           <div class="col-12">
 
-            <img src="../public/uploads/logo_kua/logo_kua.jpg" style="width: 70px; height: auto; margin-left: 46%; position: relative;"></p>
-            <br>
+            <div class="row">
+              <div class="col-md-1"></div>
+              <div class="col-md-1">
+                <img src="../public/uploads/logo_kua/logo_kua.jpg" style="width: 80px; height: auto; margin-left: 5%; position: relative;"></p>  
+              </div>
+              <div class="col-md-8">
+                <h3 style="text-align:center; line-height: 0; margin-bottom: 15px;">KEMENTERIAN AGAMA REPUBLIK INDONESIA</h3>
+                <p style="text-align:center">
+                <b >KANTOR KEMENTERIAN AGAMA REPUBLIK INDONESIA</b><br>
+                <b >KANTOR URUSAN AGAMA KECAMATAN SRONO</b><br>
+                <i >Jalan Raya Rogojampi No. 55 (0333)396833</i><br>
+                </p>
+              </div>
+              <div class="col-md-1"></div>
+            </div>
+            <hr>
+
+            
             <p><h2 style="text-align: center;">SERTIFIKAT</h2></p>
             <p><h5 style="text-align: center;">Nomor : {{$data->nomor}}/Kua.13.30.14/Pw.00/XII/2021</h5></p>
             <br>
@@ -117,7 +133,7 @@ Sertifikat Calon Suami
                 </thead>
                 <tbody>
                   @php $no=1 @endphp
-                  @foreach($materi as $data)
+                  @foreach($detail_bimbingan as $data)
                   <tr>
                     <td style="text-align: center;">{{$no++ }}</td>
                     <td style="text-align: center;">{{$data->nama_materi }}</td>
