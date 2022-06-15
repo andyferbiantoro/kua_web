@@ -91,11 +91,11 @@ Data Materi Pra-Nikah
                         @foreach($pengantin as $data)
                         <option value="{{$data->id}}">{{$data->nama_calon_suami}} dan {{$data->nama_calon_istri}}</option>
                         @endforeach
-                      </select><br>
+                      </select>
                     </div>
 
-                    <div class="form-group">
-                      <label>Materi Bimbingan</label>
+                    <div class="form-group" style="margin-left:20px">
+                      <label >Materi Bimbingan</label>
                       @foreach($materi as $data)
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="{{$data->id}}" id="{{$data->id}}" name="id_materi_bimbingan[]">

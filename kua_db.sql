@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2022 at 02:04 AM
+-- Generation Time: Jun 15, 2022 at 05:45 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -20,6 +20,21 @@ SET time_zone = "+00:00";
 --
 -- Database: `kua_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bimbingan`
+--
+
+CREATE TABLE `bimbingan` (
+  `id` int(11) NOT NULL,
+  `id_calon_pengantin` int(11) NOT NULL,
+  `id_user_penyuluh` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -548,6 +563,20 @@ INSERT INTO `cities` (`city_id`, `city_name`, `prov_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `detail_bimbingan`
+--
+
+CREATE TABLE `detail_bimbingan` (
+  `id` int(11) NOT NULL,
+  `id_bimbingan` int(11) NOT NULL,
+  `id_materi_bimbingan` int(11) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `jadwal`
 --
 
@@ -575,9 +604,6 @@ CREATE TABLE `jadwal` (
 CREATE TABLE `materi_bimbingan` (
   `id` int(11) NOT NULL,
   `nama_materi` varchar(100) NOT NULL,
-  `id_user_penyuluh` int(11) DEFAULT NULL,
-  `id_calon_pengantin` int(11) DEFAULT NULL,
-  `status` int(11) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -586,8 +612,17 @@ CREATE TABLE `materi_bimbingan` (
 -- Dumping data for table `materi_bimbingan`
 --
 
-INSERT INTO `materi_bimbingan` (`id`, `nama_materi`, `id_user_penyuluh`, `id_calon_pengantin`, `status`, `created_at`, `updated_at`) VALUES
-(5, 'materi 1', 13, 7, 1, '2022-05-28 13:01:30', '2022-05-28 13:01:30');
+INSERT INTO `materi_bimbingan` (`id`, `nama_materi`, `created_at`, `updated_at`) VALUES
+(1, 'Materi 1', NULL, NULL),
+(2, 'Materi 2', NULL, NULL),
+(3, 'Materi 3', NULL, NULL),
+(4, 'Materi 4', NULL, NULL),
+(5, 'Materi 5', NULL, NULL),
+(6, 'Materi 6', NULL, NULL),
+(7, 'Materi 7', NULL, NULL),
+(8, 'Materi 8', NULL, NULL),
+(9, 'Materi 9', NULL, NULL),
+(10, 'Materi 10', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -617,7 +652,8 @@ CREATE TABLE `penyuluh` (
 --
 
 INSERT INTO `penyuluh` (`id`, `nik_penyuluh`, `nama_pegawai`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `agama`, `pendidikan_formal`, `alamat_rumah`, `no_telp`, `alamat_email`, `id_user`, `created_at`, `updated_at`) VALUES
-(8, '2131241231', 'Sukirman', 'ACEH BESAR', NULL, 'Laki-laki', 'islam', 'sarjana', 'Srono', '085258509654', 'penyuluh@gmail.com', NULL, '2022-05-30 23:45:21', '2022-05-30 23:55:07');
+(8, '2131241231', 'Sukirman', 'ACEH BESAR', NULL, 'Laki-laki', 'islam', 'sarjana', 'Srono', '085258509654', 'penyuluh@gmail.com', 19, '2022-05-30 23:45:21', '2022-05-30 23:55:07'),
+(9, '2131353453435', 'Jumaidi', 'BATANG', '1983-02-15', 'Laki-laki', 'islam', 'sarjana', 'Srono', '085258509654', 'penyuluh2@gmail.com', 21, '2022-06-15 03:28:37', '2022-06-15 03:28:37');
 
 -- --------------------------------------------------------
 
@@ -727,7 +763,9 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `email`, `password`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'admin@gmail.com', '$2y$10$sQGoioeR7X/7CBffNnq/huw7w4U.Yq8tCOZ7uY6FrJyC82O5pNuHK', 'admin', NULL, NULL),
 (5, 'kepala_kua@gmail.com', '$2y$10$sQGoioeR7X/7CBffNnq/huw7w4U.Yq8tCOZ7uY6FrJyC82O5pNuHK', 'kepala_kua', NULL, NULL),
-(19, 'penyuluh@gmail.com', '$2y$10$8.CnsNzxffjf4bdG3ONbleB6a7QojNKqL.Dr3CJCKAU5Zd8nEY35K', 'penyuluh', '2022-05-30 23:45:21', '2022-05-30 23:45:21');
+(19, 'penyuluh@gmail.com', '$2y$10$8.CnsNzxffjf4bdG3ONbleB6a7QojNKqL.Dr3CJCKAU5Zd8nEY35K', 'penyuluh', '2022-05-30 23:45:21', '2022-05-30 23:45:21'),
+(20, 'andyfebri999@gmail.com', '$2y$10$zc.o7kPNMbRH.QVsiP7/7OHyOUrw/4RkbnqlXMFS85TS/HnC9vbZ.', 'calon_pengantin', '2022-06-09 00:17:32', '2022-06-09 00:17:32'),
+(21, 'penyuluh2@gmail.com', '$2y$10$Shjo99eBbeKMaU8ZDzxple6NSre6YFzBnnhw2oKxWw4shjPILTavq', 'penyuluh', '2022-06-15 03:28:37', '2022-06-15 03:28:37');
 
 -- --------------------------------------------------------
 
@@ -762,6 +800,12 @@ INSERT INTO `wali_nikah` (`id`, `nama_lengkap`, `nik`, `tempat_lahir`, `tanggal_
 --
 
 --
+-- Indexes for table `bimbingan`
+--
+ALTER TABLE `bimbingan`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `calon_pengantin`
 --
 ALTER TABLE `calon_pengantin`
@@ -772,6 +816,12 @@ ALTER TABLE `calon_pengantin`
 --
 ALTER TABLE `cities`
   ADD PRIMARY KEY (`city_id`) USING BTREE;
+
+--
+-- Indexes for table `detail_bimbingan`
+--
+ALTER TABLE `detail_bimbingan`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `jadwal`
@@ -826,10 +876,16 @@ ALTER TABLE `wali_nikah`
 --
 
 --
+-- AUTO_INCREMENT for table `bimbingan`
+--
+ALTER TABLE `bimbingan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `calon_pengantin`
 --
 ALTER TABLE `calon_pengantin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `cities`
@@ -838,22 +894,28 @@ ALTER TABLE `cities`
   MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=476;
 
 --
+-- AUTO_INCREMENT for table `detail_bimbingan`
+--
+ALTER TABLE `detail_bimbingan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
 -- AUTO_INCREMENT for table `jadwal`
 --
 ALTER TABLE `jadwal`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `materi_bimbingan`
 --
 ALTER TABLE `materi_bimbingan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `penyuluh`
 --
 ALTER TABLE `penyuluh`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `provinces`
@@ -871,13 +933,13 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `sertifikat`
 --
 ALTER TABLE `sertifikat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `wali_nikah`

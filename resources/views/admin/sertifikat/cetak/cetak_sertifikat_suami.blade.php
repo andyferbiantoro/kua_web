@@ -57,10 +57,9 @@ p {
               </div>
               <!-- <div class="col-md-1"></div> -->
             </div>
-
-
-
             <hr>
+
+            
             <h2 style="text-align: center;">SERTIFIKAT</h2>
             @foreach($sertifikat as $data)
             <h5 style="text-align: center;">Nomor : {{$data->nomor}}/Kua.13.30.14/Pw.00/XII/2021</h5>
